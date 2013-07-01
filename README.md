@@ -7,6 +7,6 @@ to get the pdfs.
 
 Requires a file caled 'config.py' with something like:
 
-  USER_ID = 1
+    USER_ID = 1
 
 (configured to your UserID, of course.)

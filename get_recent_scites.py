@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import re, os, sys, pdb
+import re, os, sys, pdb, datetime
 
 import codecs, unicodedata
 
@@ -99,7 +99,7 @@ def gen_scripts (data): # {{{
 def main (argv): # {{{
 
     last_id = argv[1]
-    url     = "https://scirate3.herokuapp.com/users/" + USER_ID + "/scites?page=%s"
+    url     = "https://scirate3.herokuapp.com/users/" + str(USER_ID) + "/scites?page=%s"
 
     completed = False
     page = 1

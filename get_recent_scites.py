@@ -18,7 +18,7 @@ import urllib
 def get_recent_scites (html, last_id): # {{{
 
     data  = defaultdict(list)
-    soup  = BeautifulSoup(html)
+    soup  = BeautifulSoup(html, "html5lib")
     stuff = soup.find_all("li", class_="papers")
 
 

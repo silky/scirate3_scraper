@@ -89,7 +89,10 @@ def gen_scripts (data): # {{{
         outf = open("%s.sh" % (k,), "w")
         outf.write("rm %s.bib\n\n" % (k,))
         for entry in v:
-            outf.write('arxiv.py bib %s >> %s.bib\n' % (entry["id"], k))
+            outf.write('arxiv.py bib %(id)s --file \"%(bibtex)s, %(id)s.pdf\" >> %(k)s.bib\n' % {
+                'id': entry["id"], 'k': k,
+                "bibtex": entry["bibtex"]
+                })
             outf.write('wget --user-agent=Lynx http://arxiv.org/pdf/%(id)s -O "%(bibtex)s, %(id)s.pdf"\n' % entry)
             outf.write("\n\n")
         outf.close()

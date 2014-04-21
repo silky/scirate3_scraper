@@ -19,7 +19,7 @@ def get_recent_scites (html, last_id): # {{{
 
     data  = defaultdict(list)
     soup  = BeautifulSoup(html, "html5lib")
-    stuff = soup.find_all("li", class_="papers")
+    stuff = soup.find_all("li", class_="paper")
 
 
     if not stuff or len(stuff) <= 0:
@@ -28,14 +28,14 @@ def get_recent_scites (html, last_id): # {{{
 
     for thing in stuff:
         # We want the following. The arXiv ID
-        arXiv_id = thing.find_all("a")[0].get("href").strip("/ ")
+        arXiv_id = thing.find_all("div", class_="title")[0].find_all("a")[0].get("href").split("/")[-1]
 
         if arXiv_id == last_id:
             return True, data
 
         # We'd also like the primary category.
-        rcat     = thing.find_all("span", class_="identifier")[0].text
-        category = general_category_for(re.findall("\[(.*)\]", rcat)[0])
+        raw_cat  = thing.find_all("span", class_="uid")[0].find_all("a")[0].text
+        category = general_category_for(raw_cat)
 
         # And also the first author
         author = thing.find_all("div", 
@@ -102,7 +102,7 @@ def gen_scripts (data): # {{{
 def main (argv): # {{{
 
     last_id = argv[1]
-    url     = "https://scirate3.herokuapp.com/users/" + str(USER_ID) + "/scites?page=%s"
+    url     = "https://scirate.com/" + str(USER_ID) + "?scite_page=%s"
 
     completed = False
     page = 1

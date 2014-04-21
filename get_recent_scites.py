@@ -28,7 +28,12 @@ def get_recent_scites (html, last_id): # {{{
 
     for thing in stuff:
         # We want the following. The arXiv ID
-        arXiv_id = thing.find_all("div", class_="title")[0].find_all("a")[0].get("href").split("/")[-1]
+        tmp = thing.find_all("div", class_="title")[0].find_all("a")[0].get("href").split("/")
+        # TODO: fix bug where it discards quant-ph/1231231 etc.
+        arXiv_id = tmp[-1]
+
+        if not("." in arXiv_id):
+            arXiv_id = tmp[-2] + "/" + tmp[-1]
 
         if arXiv_id == last_id:
             return True, data
@@ -89,7 +94,7 @@ def gen_scripts (data): # {{{
         outf = open("%s.sh" % (k,), "w")
         outf.write("rm %s.bib\n\n" % (k,))
         for entry in v:
-            outf.write('arxiv.py bib %(id)s --file \"%(bibtex)s, %(id)s.pdf\" >> %(k)s.bib\n' % {
+            outf.write('arxiv.py bib "%(id)s" --file \"%(bibtex)s, %(id)s.pdf\" >> %(k)s.bib\n' % {
                 'id': entry["id"], 'k': k,
                 "bibtex": entry["bibtex"]
                 })

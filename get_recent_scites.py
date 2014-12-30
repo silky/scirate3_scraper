@@ -39,14 +39,15 @@ def get_recent_scites (html, last_id): # {{{
             return True, data
 
         # We'd also like the primary category.
-        raw_cat  = thing.find_all("span", class_="uid")[0].find_all("a")[0].text
+        raw_cat  = thing.find_all("div", class_="uid")[0].find_all("a")[0].text
         category = general_category_for(raw_cat)
+
 
         # And also the first author
         author = thing.find_all("div", 
-                class_="authors")[0].find_all("a")[0].text
+                class_="authors")[0].find_all("a")[0].text.replace(",", "")
 
-        surname = author.split(" ")[-1]
+        surname = [x for x in author.split(" ") if x][-1]
         clean_surname = urllib.quote(unicodedata.normalize('NFKD', surname).encode('ascii', 'ignore'))
 
         # Optimistic code lifetime assumption
@@ -63,8 +64,9 @@ def get_recent_scites (html, last_id): # {{{
 
 
 groups = {
-	"physics":   ["physics.", "hep-", "nucl-th", "gr-qc", "cond-mat."],
-	"astro-ph":  ["astro-ph."],
+	"physics":   ["physics.", "hep-", "nucl-th", "gr-qc", "cond-mat.",
+            "nucl-ex"],
+	"astro-ph":  ["astro-ph.", "astro-ph"],
 	"quant":     ["quant-ph", "q-"],
 	"math":      ["math.", "math-ph", "nlin"],
 	"cs":        ["cs.", "stat."],
@@ -107,7 +109,7 @@ def gen_scripts (data): # {{{
 def main (argv): # {{{
 
     last_id = argv[1]
-    url     = "https://scirate.com/" + str(USER_ID) + "?scite_page=%s"
+    url     = "https://scirate.com/" + str(USER_ID) + "/scites?page=%s"
 
     completed = False
     page = 1
